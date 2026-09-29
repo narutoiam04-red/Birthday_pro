@@ -6,7 +6,7 @@
   <title>A Birthday Wish for Kiranmai</title>
   <meta name="description" content="A cinematic birthday film in four acts: a beating heart you open with a tap, a rush of colour, a kinetic wish, and a tree that blooms into a heart of petals." />
   <meta name="theme-color" content="#f7e7dc" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" type="image/png" href="./favicon.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -247,6 +247,8 @@
   <!-- Accessible equivalent for reduced-motion + screen readers. -->
   <p class="sr-only">Happy Birthday. Here&rsquo;s to a wonderful year ahead.</p>
 
-  <script type="module" src="./birthday.js"></script>
+  <!-- Static-hosting build: load GSAP globally so GitHub Pages can run this without npm/Vite. -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="./birthday.js"></script>
 </body>
 </html>
