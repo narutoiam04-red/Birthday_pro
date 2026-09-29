@@ -978,9 +978,9 @@ const proposalYes = $('proposalYes');
 const proposalNo = $('proposalNo');
 const proposalStatus = $('proposalStatus');
 
-// The response is delivered to this address by the form endpoint below.
-const RESPONSE_EMAIL = 'sndesh44@gmail.com';
-const RESPONSE_ENDPOINT = `https://formsubmit.co/ajax/${RESPONSE_EMAIL}`;
+// On YES, WhatsApp opens with "143" pre-filled to this number (country code + number, digits only).
+const WHATSAPP_NUMBER = '917995780167';
+const WHATSAPP_TEXT = '143';
 let selectedAnswer = '';
 let responseSent = false;
 let noNudges = 0;
@@ -1000,7 +1000,7 @@ function closeProposal(){
   noNudges = 0;
 }
 
-async function sendAnswer(answer){
+function sendAnswer(answer){
   if (responseSent) return;
   responseSent = true;
   selectedAnswer = answer;
@@ -1013,36 +1013,11 @@ async function sendAnswer(answer){
     ? '❤️ Thank you for telling me your heart.'
     : '🤍 Thank you for being honest. I respect your answer.';
 
-  const payload = {
-    _subject: `Kiranmai — proposal answer: ${answer}`,
-    _captcha: 'false',
-    _template: 'table',
-    name: 'Kiranmai',
-    answer,
-    message: isYes
-      ? 'Kiranmai selected YES. Sandesh Chaitanya also loves her.'
-      : 'Kiranmai selected NO. Sandesh Chaitanya respects her honest answer.',
-    page: window.location.href,
-    time: new Date().toISOString()
-  };
-
-  // Send in the background. The page never waits for the network before
-  // showing the final response, so a slow mobile connection cannot spoil the moment.
-  const body = new URLSearchParams(payload).toString();
-  try {
-    const res = await fetch(RESPONSE_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json' },
-      body,
-      keepalive: true,
-      mode: 'cors'
-    });
-    if (!res.ok) throw new Error('send failed');
-  } catch (err) {
-    // Best-effort background retry without opening an email app or interrupting the visitor.
-    try {
-      navigator.sendBeacon(RESPONSE_ENDPOINT, new Blob([body], { type: 'application/x-www-form-urlencoded;charset=UTF-8' }));
-    } catch (_) {}
+  // NO sends nothing. YES opens WhatsApp with the message ready to send.
+  if (isYes){
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;
+    const w = window.open(url, '_blank');
+    if (!w) window.location.href = url;
   }
 }
 
